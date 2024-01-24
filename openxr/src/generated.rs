@@ -13,7 +13,8 @@ pub use sys::{
     CompositionLayerSecureContentFlagsFB, CompositionLayerSettingsFlagsFB,
     CompositionLayerSpaceWarpInfoFlagsFB, DebugUtilsMessageSeverityFlagsEXT,
     DebugUtilsMessageTypeFlagsEXT, DigitalLensControlFlagsALMALENCE, EnvironmentBlendMode,
-    Extent2Df, Extent2Di, Extent3DfEXT, Extent3DfFB, ExternalCameraAttachedToDeviceOCULUS,
+    EnvironmentDepthProviderCreateFlagsMETA, EnvironmentDepthSwapchainCreateFlagsMETA, Extent2Df,
+    Extent2Di, Extent3DfEXT, Extent3DfFB, ExternalCameraAttachedToDeviceOCULUS,
     ExternalCameraExtrinsicsOCULUS, ExternalCameraIntrinsicsOCULUS,
     ExternalCameraStatusFlagsOCULUS, EyeCalibrationStatusML, EyeExpressionHTC, EyePositionFB,
     EyeVisibility, FaceConfidenceFB, FaceExpressionFB, FaceExpressionSetFB, FacialTrackingTypeHTC,
@@ -163,6 +164,7 @@ pub struct ExtensionSet {
     pub meta_performance_metrics: bool,
     pub meta_headset_id: bool,
     pub meta_passthrough_color_lut: bool,
+    pub meta_environment_depth: bool,
     pub ml_ml2_controller_interaction: bool,
     pub ml_frame_end_info: bool,
     pub ml_global_dimmer: bool,
@@ -519,6 +521,9 @@ impl ExtensionSet {
                 }
                 raw::PassthroughColorLutMETA::NAME => {
                     out.meta_passthrough_color_lut = true;
+                }
+                raw::EnvironmentDepthMETA::NAME => {
+                    out.meta_environment_depth = true;
                 }
                 raw::Ml2ControllerInteractionML::NAME => {
                     out.ml_ml2_controller_interaction = true;
@@ -1149,6 +1154,11 @@ impl ExtensionSet {
             }
         }
         {
+            if self.meta_environment_depth {
+                out.push(raw::EnvironmentDepthMETA::NAME.into());
+            }
+        }
+        {
             if self.ml_ml2_controller_interaction {
                 out.push(raw::Ml2ControllerInteractionML::NAME.into());
             }
@@ -1441,6 +1451,7 @@ pub struct InstanceExtensions {
     pub meta_performance_metrics: Option<raw::PerformanceMetricsMETA>,
     pub meta_headset_id: Option<raw::HeadsetIdMETA>,
     pub meta_passthrough_color_lut: Option<raw::PassthroughColorLutMETA>,
+    pub meta_environment_depth: Option<raw::EnvironmentDepthMETA>,
     pub ml_ml2_controller_interaction: Option<raw::Ml2ControllerInteractionML>,
     pub ml_frame_end_info: Option<raw::FrameEndInfoML>,
     pub ml_global_dimmer: Option<raw::GlobalDimmerML>,
@@ -2016,6 +2027,11 @@ impl InstanceExtensions {
             },
             meta_passthrough_color_lut: if required.meta_passthrough_color_lut {
                 Some(raw::PassthroughColorLutMETA::load(entry, instance)?)
+            } else {
+                None
+            },
+            meta_environment_depth: if required.meta_environment_depth {
+                Some(raw::EnvironmentDepthMETA::load(entry, instance)?)
             } else {
                 None
             },
@@ -5127,6 +5143,83 @@ pub mod raw {
                 update_passthrough_color_lut: mem::transmute(entry.get_instance_proc_addr(
                     instance,
                     CStr::from_bytes_with_nul_unchecked(b"xrUpdatePassthroughColorLutMETA\0"),
+                )?),
+            })
+        }
+    }
+    #[derive(Copy, Clone)]
+    pub struct EnvironmentDepthMETA {
+        pub create_environment_depth_provider: pfn::CreateEnvironmentDepthProviderMETA,
+        pub destroy_environment_depth_provider: pfn::DestroyEnvironmentDepthProviderMETA,
+        pub start_environment_depth_provider: pfn::StartEnvironmentDepthProviderMETA,
+        pub stop_environment_depth_provider: pfn::StopEnvironmentDepthProviderMETA,
+        pub create_environment_depth_swapchain: pfn::CreateEnvironmentDepthSwapchainMETA,
+        pub destroy_environment_depth_swapchain: pfn::DestroyEnvironmentDepthSwapchainMETA,
+        pub enumerate_environment_depth_swapchain_images:
+            pfn::EnumerateEnvironmentDepthSwapchainImagesMETA,
+        pub get_environment_depth_swapchain_state: pfn::GetEnvironmentDepthSwapchainStateMETA,
+        pub acquire_environment_depth_image: pfn::AcquireEnvironmentDepthImageMETA,
+        pub set_environment_depth_hand_removal: pfn::SetEnvironmentDepthHandRemovalMETA,
+    }
+    impl EnvironmentDepthMETA {
+        pub const VERSION: u32 = sys::META_environment_depth_SPEC_VERSION;
+        pub const NAME: &'static [u8] = sys::META_ENVIRONMENT_DEPTH_EXTENSION_NAME;
+        #[doc = r" Load the extension's function pointer table"]
+        #[doc = r""]
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" `instance` must be a valid instance handle."]
+        pub unsafe fn load(entry: &Entry, instance: sys::Instance) -> Result<Self> {
+            Ok(Self {
+                create_environment_depth_provider: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrCreateEnvironmentDepthProviderMETA\0"),
+                )?),
+                destroy_environment_depth_provider: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrDestroyEnvironmentDepthProviderMETA\0"),
+                )?),
+                start_environment_depth_provider: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrStartEnvironmentDepthProviderMETA\0"),
+                )?),
+                stop_environment_depth_provider: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrStopEnvironmentDepthProviderMETA\0"),
+                )?),
+                create_environment_depth_swapchain: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrCreateEnvironmentDepthSwapchainMETA\0"),
+                )?),
+                destroy_environment_depth_swapchain: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(
+                        b"xrDestroyEnvironmentDepthSwapchainMETA\0",
+                    ),
+                )?),
+                enumerate_environment_depth_swapchain_images: mem::transmute(
+                    entry.get_instance_proc_addr(
+                        instance,
+                        CStr::from_bytes_with_nul_unchecked(
+                            b"xrEnumerateEnvironmentDepthSwapchainImagesMETA\0",
+                        ),
+                    )?,
+                ),
+                get_environment_depth_swapchain_state: mem::transmute(
+                    entry.get_instance_proc_addr(
+                        instance,
+                        CStr::from_bytes_with_nul_unchecked(
+                            b"xrGetEnvironmentDepthSwapchainStateMETA\0",
+                        ),
+                    )?,
+                ),
+                acquire_environment_depth_image: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrAcquireEnvironmentDepthImageMETA\0"),
+                )?),
+                set_environment_depth_hand_removal: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrSetEnvironmentDepthHandRemovalMETA\0"),
                 )?),
             })
         }
