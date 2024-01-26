@@ -393,6 +393,8 @@ impl StructureType {
     pub const ENVIRONMENT_DEPTH_IMAGE_META: StructureType = Self(1000290005i32);
     pub const ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META: StructureType = Self(1000290006i32);
     pub const SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META: StructureType = Self(1000290007i32);
+    pub const SPACE_TRIANGLE_MESH_GET_INFO_META: StructureType = Self(1000268001i32);
+    pub const SPACE_TRIANGLE_MESH_META: StructureType = Self(1000268002i32);
     pub fn from_raw(x: i32) -> Self {
         Self(x)
     }
@@ -925,6 +927,8 @@ impl fmt::Debug for StructureType {
             Self::SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META => {
                 Some("SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META")
             }
+            Self::SPACE_TRIANGLE_MESH_GET_INFO_META => Some("SPACE_TRIANGLE_MESH_GET_INFO_META"),
+            Self::SPACE_TRIANGLE_MESH_META => Some("SPACE_TRIANGLE_MESH_META"),
             _ => None,
         };
         fmt_enum(fmt, self.0, name)
@@ -1882,6 +1886,7 @@ impl SpaceComponentTypeFB {
     pub const ROOM_LAYOUT: SpaceComponentTypeFB = Self(6i32);
     #[doc = "Space container component."]
     pub const SPACE_CONTAINER: SpaceComponentTypeFB = Self(7i32);
+    pub const TRIANGLE_MESH_M: SpaceComponentTypeFB = Self(1000268000i32);
     pub fn from_raw(x: i32) -> Self {
         Self(x)
     }
@@ -1900,6 +1905,7 @@ impl fmt::Debug for SpaceComponentTypeFB {
             Self::SEMANTIC_LABELS => Some("SEMANTIC_LABELS"),
             Self::ROOM_LAYOUT => Some("ROOM_LAYOUT"),
             Self::SPACE_CONTAINER => Some("SPACE_CONTAINER"),
+            Self::TRIANGLE_MESH_M => Some("TRIANGLE_MESH_M"),
             _ => None,
         };
         fmt_enum(fmt, self.0, name)
@@ -9795,6 +9801,26 @@ pub struct SystemEnvironmentDepthPropertiesMETA {
     pub supports_environment_depth: Bool32,
     pub supports_hand_removal: Bool32,
 }
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+#[doc = "See [XrSpaceTriangleMeshGetInfoMETA](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceTriangleMeshGetInfoMETA) - defined by [XR_META_spatial_entity_mesh](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_META_spatial_entity_mesh)"]
+pub struct SpaceTriangleMeshGetInfoMETA {
+    pub ty: StructureType,
+    pub next: *const c_void,
+}
+#[repr(C)]
+#[derive(Copy, Clone, Debug)]
+#[doc = "See [XrSpaceTriangleMeshMETA](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XrSpaceTriangleMeshMETA) - defined by [XR_META_spatial_entity_mesh](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_META_spatial_entity_mesh)"]
+pub struct SpaceTriangleMeshMETA {
+    pub ty: StructureType,
+    pub next: *mut c_void,
+    pub vertex_capacity_input: u32,
+    pub vertex_count_output: u32,
+    pub vertices: *mut Vector3f,
+    pub index_capacity_input: u32,
+    pub index_count_output: u32,
+    pub indices: *mut u32,
+}
 #[doc = r" Function pointer prototypes"]
 pub mod pfn {
     use super::*;
@@ -11078,6 +11104,12 @@ pub mod pfn {
         environment_depth_provider: EnvironmentDepthProviderMETA,
         set_info: *const EnvironmentDepthHandRemovalSetInfoMETA,
     ) -> Result;
+    #[doc = "See [xrGetSpaceTriangleMeshMETA](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetSpaceTriangleMeshMETA) - defined by [XR_META_spatial_entity_mesh](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_META_spatial_entity_mesh)"]
+    pub type GetSpaceTriangleMeshMETA = unsafe extern "system" fn(
+        space: Space,
+        get_info: *const SpaceTriangleMeshGetInfoMETA,
+        triangle_mesh_output: *mut SpaceTriangleMeshMETA,
+    ) -> Result;
     #[doc = "See [xrGetVulkanGraphicsRequirements2KHR](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#xrGetVulkanGraphicsRequirements2KHR) - defined by [XR_KHR_vulkan_enable](https://www.khronos.org/registry/OpenXR/specs/1.0/html/xrspec.html#XR_KHR_vulkan_enable)"]
     pub type GetVulkanGraphicsRequirements2KHR = unsafe extern "system" fn(
         instance: Instance,
@@ -11341,6 +11373,8 @@ pub const META_passthrough_color_lut_SPEC_VERSION: u32 = 1u32;
 pub const META_PASSTHROUGH_COLOR_LUT_EXTENSION_NAME: &[u8] = b"XR_META_passthrough_color_lut\0";
 pub const META_environment_depth_SPEC_VERSION: u32 = 1u32;
 pub const META_ENVIRONMENT_DEPTH_EXTENSION_NAME: &[u8] = b"XR_META_environment_depth\0";
+pub const META_spatial_entity_mesh_SPEC_VERSION: u32 = 1u32;
+pub const META_SPATIAL_ENTITY_MESH_EXTENSION_NAME: &[u8] = b"XR_META_spatial_entity_mesh\0";
 pub const ML_ml2_controller_interaction_SPEC_VERSION: u32 = 1u32;
 pub const ML_ML2_CONTROLLER_INTERACTION_EXTENSION_NAME: &[u8] =
     b"XR_ML_ml2_controller_interaction\0";

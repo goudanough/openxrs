@@ -165,6 +165,7 @@ pub struct ExtensionSet {
     pub meta_headset_id: bool,
     pub meta_passthrough_color_lut: bool,
     pub meta_environment_depth: bool,
+    pub meta_spatial_entity_mesh: bool,
     pub ml_ml2_controller_interaction: bool,
     pub ml_frame_end_info: bool,
     pub ml_global_dimmer: bool,
@@ -524,6 +525,9 @@ impl ExtensionSet {
                 }
                 raw::EnvironmentDepthMETA::NAME => {
                     out.meta_environment_depth = true;
+                }
+                raw::SpatialEntityMeshMETA::NAME => {
+                    out.meta_spatial_entity_mesh = true;
                 }
                 raw::Ml2ControllerInteractionML::NAME => {
                     out.ml_ml2_controller_interaction = true;
@@ -1159,6 +1163,11 @@ impl ExtensionSet {
             }
         }
         {
+            if self.meta_spatial_entity_mesh {
+                out.push(raw::SpatialEntityMeshMETA::NAME.into());
+            }
+        }
+        {
             if self.ml_ml2_controller_interaction {
                 out.push(raw::Ml2ControllerInteractionML::NAME.into());
             }
@@ -1452,6 +1461,7 @@ pub struct InstanceExtensions {
     pub meta_headset_id: Option<raw::HeadsetIdMETA>,
     pub meta_passthrough_color_lut: Option<raw::PassthroughColorLutMETA>,
     pub meta_environment_depth: Option<raw::EnvironmentDepthMETA>,
+    pub meta_spatial_entity_mesh: Option<raw::SpatialEntityMeshMETA>,
     pub ml_ml2_controller_interaction: Option<raw::Ml2ControllerInteractionML>,
     pub ml_frame_end_info: Option<raw::FrameEndInfoML>,
     pub ml_global_dimmer: Option<raw::GlobalDimmerML>,
@@ -2032,6 +2042,11 @@ impl InstanceExtensions {
             },
             meta_environment_depth: if required.meta_environment_depth {
                 Some(raw::EnvironmentDepthMETA::load(entry, instance)?)
+            } else {
+                None
+            },
+            meta_spatial_entity_mesh: if required.meta_spatial_entity_mesh {
+                Some(raw::SpatialEntityMeshMETA::load(entry, instance)?)
             } else {
                 None
             },
@@ -5220,6 +5235,27 @@ pub mod raw {
                 set_environment_depth_hand_removal: mem::transmute(entry.get_instance_proc_addr(
                     instance,
                     CStr::from_bytes_with_nul_unchecked(b"xrSetEnvironmentDepthHandRemovalMETA\0"),
+                )?),
+            })
+        }
+    }
+    #[derive(Copy, Clone)]
+    pub struct SpatialEntityMeshMETA {
+        pub get_space_triangle_mesh: pfn::GetSpaceTriangleMeshMETA,
+    }
+    impl SpatialEntityMeshMETA {
+        pub const VERSION: u32 = sys::META_spatial_entity_mesh_SPEC_VERSION;
+        pub const NAME: &'static [u8] = sys::META_SPATIAL_ENTITY_MESH_EXTENSION_NAME;
+        #[doc = r" Load the extension's function pointer table"]
+        #[doc = r""]
+        #[doc = r" # Safety"]
+        #[doc = r""]
+        #[doc = r" `instance` must be a valid instance handle."]
+        pub unsafe fn load(entry: &Entry, instance: sys::Instance) -> Result<Self> {
+            Ok(Self {
+                get_space_triangle_mesh: mem::transmute(entry.get_instance_proc_addr(
+                    instance,
+                    CStr::from_bytes_with_nul_unchecked(b"xrGetSpaceTriangleMeshMETA\0"),
                 )?),
             })
         }
