@@ -393,8 +393,8 @@ impl StructureType {
     pub const ENVIRONMENT_DEPTH_IMAGE_META: StructureType = Self(1000290005i32);
     pub const ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META: StructureType = Self(1000290006i32);
     pub const SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META: StructureType = Self(1000290007i32);
-    pub const SPACE_TRIANGLE_MESH_GET_INFO_META: StructureType = Self(1000268001i32);
-    pub const SPACE_TRIANGLE_MESH_META: StructureType = Self(1000268002i32);
+    pub const SPACE_TRIANGLE_MESH_GET_INFO_META: StructureType = Self(1000269001i32);
+    pub const SPACE_TRIANGLE_MESH_META: StructureType = Self(1000269002i32);
     pub fn from_raw(x: i32) -> Self {
         Self(x)
     }
@@ -1886,7 +1886,7 @@ impl SpaceComponentTypeFB {
     pub const ROOM_LAYOUT: SpaceComponentTypeFB = Self(6i32);
     #[doc = "Space container component."]
     pub const SPACE_CONTAINER: SpaceComponentTypeFB = Self(7i32);
-    pub const TRIANGLE_MESH_M: SpaceComponentTypeFB = Self(1000268000i32);
+    pub const TRIANGLE_MESH_M: SpaceComponentTypeFB = Self(1000269000i32);
     pub fn from_raw(x: i32) -> Self {
         Self(x)
     }
