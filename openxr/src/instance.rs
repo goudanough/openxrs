@@ -738,7 +738,7 @@ pub struct ViewConfigurationView {
 }
 
 pub struct EventDataBuffer {
-    inner: MaybeUninit<sys::EventDataBuffer>,
+    pub inner: MaybeUninit<sys::EventDataBuffer>,
 }
 
 impl EventDataBuffer {
