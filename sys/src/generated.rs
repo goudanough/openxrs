@@ -385,14 +385,14 @@ impl StructureType {
     pub const PLANE_DETECTOR_LOCATION_EXT: StructureType = Self(1000429005i32);
     pub const PLANE_DETECTOR_POLYGON_BUFFER_EXT: StructureType = Self(1000429006i32);
     pub const SYSTEM_PLANE_DETECTION_PROPERTIES_EXT: StructureType = Self(1000429007i32);
-    pub const ENVIRONMENT_DEPTH_PROVIDER_CREATE_INFO_META: StructureType = Self(1000290000i32);
-    pub const ENVIRONMENT_DEPTH_SWAPCHAIN_CREATE_INFO_META: StructureType = Self(1000290001i32);
-    pub const ENVIRONMENT_DEPTH_SWAPCHAIN_STATE_META: StructureType = Self(1000290002i32);
-    pub const ENVIRONMENT_DEPTH_IMAGE_ACQUIRE_INFO_META: StructureType = Self(1000290003i32);
-    pub const ENVIRONMENT_DEPTH_IMAGE_VIEW_META: StructureType = Self(1000290004i32);
-    pub const ENVIRONMENT_DEPTH_IMAGE_META: StructureType = Self(1000290005i32);
-    pub const ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META: StructureType = Self(1000290006i32);
-    pub const SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META: StructureType = Self(1000290007i32);
+    pub const ENVIRONMENT_DEPTH_PROVIDER_CREATE_INFO_META: StructureType = Self(1000291000i32);
+    pub const ENVIRONMENT_DEPTH_SWAPCHAIN_CREATE_INFO_META: StructureType = Self(1000291001i32);
+    pub const ENVIRONMENT_DEPTH_SWAPCHAIN_STATE_META: StructureType = Self(1000291002i32);
+    pub const ENVIRONMENT_DEPTH_IMAGE_ACQUIRE_INFO_META: StructureType = Self(1000291003i32);
+    pub const ENVIRONMENT_DEPTH_IMAGE_VIEW_META: StructureType = Self(1000291004i32);
+    pub const ENVIRONMENT_DEPTH_IMAGE_META: StructureType = Self(1000291005i32);
+    pub const ENVIRONMENT_DEPTH_HAND_REMOVAL_SET_INFO_META: StructureType = Self(1000291006i32);
+    pub const SYSTEM_ENVIRONMENT_DEPTH_PROPERTIES_META: StructureType = Self(1000291007i32);
     pub const SPACE_TRIANGLE_MESH_GET_INFO_META: StructureType = Self(1000269001i32);
     pub const SPACE_TRIANGLE_MESH_META: StructureType = Self(1000269002i32);
     pub fn from_raw(x: i32) -> Self {
@@ -1130,7 +1130,7 @@ impl Result {
     pub const ERROR_SPACE_NOT_LOCATABLE_EXT: Result = Self(-1000429000i32);
     #[doc = "The permission for this resource was not granted."]
     pub const ERROR_PLANE_DETECTION_PERMISSION_DENIED_EXT: Result = Self(-1000429001i32);
-    pub const ENVIRONMENT_DEPTH_NOT_AVAILABLE_META: Result = Self(1000290000i32);
+    pub const ENVIRONMENT_DEPTH_NOT_AVAILABLE_META: Result = Self(1000291000i32);
     pub fn from_raw(x: i32) -> Self {
         Self(x)
     }
@@ -1377,8 +1377,8 @@ impl ObjectType {
     pub const PASSTHROUGH_HTC: ObjectType = Self(1000317000i32);
     #[doc = "XrPlaneDetectorEXT"]
     pub const PLANE_DETECTOR_EXT: ObjectType = Self(1000429000i32);
-    pub const ENVIRONMENT_DEPTH_PROVIDER_META: ObjectType = Self(1000290000i32);
-    pub const ENVIRONMENT_DEPTH_SWAPCHAIN_META: ObjectType = Self(1000290001i32);
+    pub const ENVIRONMENT_DEPTH_PROVIDER_META: ObjectType = Self(1000291000i32);
+    pub const ENVIRONMENT_DEPTH_SWAPCHAIN_META: ObjectType = Self(1000291001i32);
     pub fn from_raw(x: i32) -> Self {
         Self(x)
     }
